@@ -25,12 +25,23 @@ class PedidosView(QWidget):
             titulo_boton="Crear Pedido",
         )
 
-        # 2. Eliminar (transaccional: borra detalle + pedido)
+        # 2. Eliminar
+        esquema_eliminar = [
+            ("ID Pedido", "input", "Buscar por ID de Pedido..."),
+            ("ID Cliente solicitante", "info", ""),
+            ("ID Comercio preparador", "info", ""),
+            ("Total de Productos", "info", ""),     # <--- NUEVO
+            ("ID Repartidor", "info", "")           # <--- NUEVO
+        ]
         tab_delete = EliminarView(
-            label_texto="ID del Pedido a anular:",
-            placeholder="Ej: 1045",
+            esquema_campos=esquema_eliminar,
             funcion_db=database.eliminar_pedido,
+            funcion_obtener_datos=database.obtener_pedidos
         )
+
+        # 3. Listar (Actualizado para que coincida con las 5 columnas)
+        cabeceras = ["ID Pedido", "ID Cliente", "ID Comercio", "Total Productos", "ID Repartidor"]
+        tab_list = ListarView(cabeceras=cabeceras, funcion_db=database.obtener_pedidos)
 
         # 3. Listar
         cabeceras = ["ID Pedido", "ID Cliente", "ID Comercio", "Total"]
