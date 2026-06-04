@@ -25,11 +25,16 @@ class ComerciosView(QWidget):
             titulo_boton="Registrar Comercio",
         )
 
-        # 2. Eliminar 
+        # 2. Eliminar
+        esquema_eliminar = [
+            ("ID Comercio", "input", "Buscar por ID..."),
+            ("Nombre del Local", "input", "Buscar por nombre..."),
+            ("Dirección Física", "info", "")
+        ]
         tab_delete = EliminarView(
-            label_texto="ID del Comercio a eliminar:",
-            placeholder="Ej: 15",
+            esquema_campos=esquema_eliminar,
             funcion_db=database.eliminar_comercio,
+            funcion_obtener_datos=database.obtener_comercios
         )
 
         # 3. Listar

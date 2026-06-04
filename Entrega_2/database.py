@@ -229,7 +229,8 @@ def obtener_clientes():
     if not conn: return []
     try:
         cur = conn.cursor()
-        cur.execute("SELECT id_cliente, nombre, email, telefono FROM public.cliente ORDER BY nombre LIMIT 50")
+        # AQUÍ ESTÁ EL CAMBIO: agregamos "telefono" al final del SELECT
+        cur.execute("SELECT id_cliente, nombre, email, telefono FROM public.cliente ORDER BY nombre")
         return cur.fetchall()
     except Error as e:
         print(f"Error obteniendo clientes: {e}")
@@ -237,18 +238,27 @@ def obtener_clientes():
     finally:
         if conn: conn.close()
 
-def eliminar_cliente(id_cliente_str):
-    """Elimina un cliente por ID."""
+def eliminar_cliente(id_cliente):
     conn = conectar()
     if not conn: return False
     try:
         cur = conn.cursor()
-        id_cli = _limpiar_id(id_cliente_str)
+        id_cli = _limpiar_id(id_cliente)
+        
+        # 1. Eliminar dependencias directas (hijos débiles)
+        cur.execute("DELETE FROM public.direccion WHERE id_cliente = %s", (id_cli,))
+        cur.execute("DELETE FROM public.carrito WHERE id_cliente = %s", (id_cli,))
+        
+        # 2. Eliminar el registro padre
         cur.execute("DELETE FROM public.cliente WHERE id_cliente = %s", (id_cli,))
+        
+        # 3. Confirmar la transacción
         conn.commit()
         return cur.rowcount > 0
     except Error as e:
         print(f"Error eliminando cliente: {e}")
+        # Si falla (ej: el cliente tiene un PEDIDO activo, la BD bloqueará el DELETE)
+        # Hacemos rollback para revertir el borrado de la dirección.
         conn.rollback()
         return False
     finally:
@@ -283,7 +293,8 @@ def obtener_comercios():
     if not conn: return []
     try:
         cur = conn.cursor()
-        cur.execute("SELECT id_comercio, nombre, rubro, direccion FROM public.comercio ORDER BY nombre LIMIT 50")
+        # SE AGREGÓ: rubro, id_ciudad
+        cur.execute("SELECT id_comercio, nombre, direccion, rubro, id_ciudad FROM public.comercio ORDER BY nombre")
         return cur.fetchall()
     except Error as e:
         print(f"Error obteniendo comercios: {e}")
@@ -291,14 +302,19 @@ def obtener_comercios():
     finally:
         if conn: conn.close()
 
-def eliminar_comercio(id_comercio_str):
-    """Elimina un comercio por ID."""
+def eliminar_comercio(id_comercio):
     conn = conectar()
     if not conn: return False
     try:
         cur = conn.cursor()
-        id_com = _limpiar_id(id_comercio_str)
+        id_com = _limpiar_id(id_comercio)
+        
+        # 1. Eliminar dependencias (productos del comercio)
+        cur.execute("DELETE FROM public.producto WHERE id_comercio = %s", (id_com,))
+        
+        # 2. Eliminar el registro principal
         cur.execute("DELETE FROM public.comercio WHERE id_comercio = %s", (id_com,))
+        
         conn.commit()
         return cur.rowcount > 0
     except Error as e:
@@ -350,11 +366,11 @@ def obtener_pedidos():
     if not conn: return []
     try:
         cur = conn.cursor()
-        # Adaptado a las columnas reales del esquema
+        # SE AGREGÓ: total_productos, id_repartidor
         cur.execute("""
-            SELECT id_pedido, id_cliente, id_comercio, total_productos
+            SELECT id_pedido, id_cliente, id_comercio, total_productos, id_repartidor
             FROM public.pedido
-            ORDER BY id_pedido DESC LIMIT 50
+            ORDER BY id_pedido DESC
         """)
         return cur.fetchall()
     except Error as e:
@@ -364,13 +380,24 @@ def obtener_pedidos():
         if conn: conn.close()
 
 def eliminar_pedido(id_pedido):
+    """
+    Eliminación transaccional compleja: Borra todos los registros vinculados
+    al ciclo de vida del pedido antes de borrar el pedido en sí.
+    """
     conn = conectar()
     if not conn: return False
     try:
         cur = conn.cursor()
-        # El esquema de DB está correcto para estas eliminaciones en cascada
+        
+        # 1. Eliminar todas las entidades hijas que referencian al id_pedido
         cur.execute("DELETE FROM public.detalle_pedido WHERE id_pedido = %s", (id_pedido,))
+        cur.execute("DELETE FROM public.pago WHERE id_pedido = %s", (id_pedido,))
+        cur.execute("DELETE FROM public.reclamo WHERE id_pedido = %s", (id_pedido,))
+        cur.execute("DELETE FROM public.valoracion_pedido WHERE id_pedido = %s", (id_pedido,))
+        
+        # 2. Eliminar el pedido principal
         cur.execute("DELETE FROM public.pedido WHERE id_pedido = %s", (id_pedido,))
+        
         conn.commit()
         return cur.rowcount > 0
     except Error as e:
