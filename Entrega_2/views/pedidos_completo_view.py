@@ -59,7 +59,7 @@ class PedidosCompletoView(QWidget):
         combo_comercio = QComboBox()
         combo_comercio.addItem("Seleccionar comercio", None)
         # Cargar todos los comercios desde la BD
-        for id_com, nombre, rubro, direccion in self.comercios:
+        for id_com, nombre, direccion, rubro, id_ciudad in self.comercios:
             combo_comercio.addItem(f"{nombre} ({rubro})", id_com)
         combo_comercio.setEnabled(False)
         combo_comercio.currentIndexChanged.connect(self._on_comercio_changed)
