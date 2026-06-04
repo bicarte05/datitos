@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QTabWidget
 import database
-from views.insertar_view import InsertarView
+from views.pedidos_completo_view import PedidosCompletoView
 from views.eliminar_view import EliminarView
 from views.listar_view import ListarView
 
@@ -13,17 +13,8 @@ class PedidosView(QWidget):
 
         tabs = QTabWidget()
 
-        # 1. Insertar (transaccional)
-        campos_insertar = {
-            "ID Cliente": "Ej: 414",
-            "ID Comercio": "Ej: 15",
-            "Monto Total": "Ej: 15000",
-        }
-        tab_insert = InsertarView(
-            campos_dict=campos_insertar,
-            funcion_db=database.crear_pedido_transaccional,
-            titulo_boton="Crear Pedido",
-        )
+        # 1. Insertar (nueva vista completa)
+        tab_insert = PedidosCompletoView()
 
         # 2. Eliminar (transaccional: borra detalle + pedido)
         tab_delete = EliminarView(

@@ -15,8 +15,8 @@ class ComerciosView(QWidget):
 
         # 1. Insertar
         campos_insertar = {
-            "ID del Comercio": "Ej: 15",
             "Nombre del Local": "Ej: Pizza Los Datitos",
+            "Rubro": "Ej: Pizzería",
             "Dirección Física": "Ej: Av. Ramón Picarte 1234",
         }
         tab_insert = InsertarView(
@@ -33,7 +33,7 @@ class ComerciosView(QWidget):
         )
 
         # 3. Listar
-        cabeceras = ["ID Comercio", "Nombre", "Dirección"]
+        cabeceras = ["ID Comercio", "Nombre", "Rubro", "Dirección"]
         tab_list = ListarView(cabeceras=cabeceras, funcion_db=database.obtener_comercios)
 
         tabs.addTab(tab_insert, "INSERTAR")

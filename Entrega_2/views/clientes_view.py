@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QTabWidget
 import database
-from views.insertar_view import InsertarView
+from views.clientes_completo_view import ClientesCompletoView
 from views.eliminar_view import EliminarView
 from views.listar_view import ListarView
 
@@ -13,17 +13,8 @@ class ClientesView(QWidget):
 
         tabs = QTabWidget()
 
-        # 1. Insertar
-        campos_insertar = {
-            "ID del Cliente": "Ej: 145",
-            "Nombre Completo": "Ej: Juan Pérez",
-            "Correo Electrónico": "ejemplo@uach.cl",
-        }
-        tab_insert = InsertarView(
-            campos_dict=campos_insertar,
-            funcion_db=database.registrar_cliente,
-            titulo_boton="Guardar Cliente",
-        )
+        # 1. Insertar (nueva vista completa)
+        tab_insert = ClientesCompletoView()
 
         # 2. Eliminar
         tab_delete = EliminarView(
@@ -33,7 +24,7 @@ class ClientesView(QWidget):
         )
 
         # 3. Listar
-        cabeceras = ["ID Cliente", "Nombre", "Email"]
+        cabeceras = ["ID Cliente", "Nombre", "Email", "Teléfono"]
         tab_list = ListarView(cabeceras=cabeceras, funcion_db=database.obtener_clientes)
 
         tabs.addTab(tab_insert, "INSERTAR")
