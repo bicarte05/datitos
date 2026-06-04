@@ -13,13 +13,19 @@ class InsertarView(QWidget):
         scroll.setWidgetResizable(True)
         scroll.setFrameShape(QFrame.Shape.NoFrame)
         scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        # El scroll area y su viewport deben ser transparentes para mostrar
-        # el fondo blanco del QTabWidget::pane, no pintarlo por encima.
-        scroll.setStyleSheet("background-color: transparent;")
-        scroll.viewport().setStyleSheet("background-color: transparent;")
+        
+        # ASIGNAMOS NOMBRES (ID) PARA QUE LA TRANSPARENCIA NO AFECTE AL BOTÓN
+        scroll.setObjectName("area_scroll")
+        scroll.setStyleSheet("QScrollArea#area_scroll { background-color: transparent; }")
+        
+        viewport = scroll.viewport()
+        viewport.setObjectName("viewport_scroll")
+        viewport.setStyleSheet("QWidget#viewport_scroll { background-color: transparent; }")
 
         form_widget = QWidget()
-        form_widget.setStyleSheet("background-color: transparent;")
+        form_widget.setObjectName("contenedor_form")
+        form_widget.setStyleSheet("QWidget#contenedor_form { background-color: transparent; }")
+        
         form_layout = QVBoxLayout()
         form_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         form_layout.setSpacing(4)
