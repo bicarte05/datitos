@@ -1,0 +1,46 @@
+# ==========================================
+# Entorno Virtual
+# ==========================================
+# No subir NUNCA el entorno virtual, cada desarrollador debe instalarlo 
+# localmente usando el archivo requirements.txt
+venv/
+env/
+.venv/
+
+# ==========================================
+# Caché de Python
+# ==========================================
+# Archivos precompilados que Python genera automáticamente
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ==========================================
+# Variables de Entorno y Secretos
+# ==========================================
+# MUY IMPORTANTE: No subir credenciales de la base de datos
+.env
+.env.local
+.env.*
+
+# ==========================================
+# Archivos del Sistema Operativo
+# ==========================================
+# Archivos basura que generan Windows o Mac al navegar por carpetas
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+ehthumbs_vista.db
+[Tt]humbs.db
+
+# ==========================================
+# Archivos de Editores de Código / IDEs
+# ==========================================
+# Configuraciones locales de VS Code, PyCharm, etc.
+.vscode/
+.idea/
+*.swp
+*.swo
