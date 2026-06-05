@@ -36,7 +36,14 @@ class PedidosView(QWidget):
 
         # 3. Listar
         cabeceras = ["ID Pedido", "ID Cliente", "ID Comercio", "Total"]
-        tab_list = ListarView(cabeceras=cabeceras, funcion_db=database.obtener_pedidos)
+        tab_list = ListarView(
+            cabeceras=cabeceras, 
+            funcion_db=database.obtener_pedidos,
+            placeholder_buscador="🔍 Buscar por ID Pedido, Cliente o Comercio...",
+            usar_filtro_combo=True,
+            titulo_combo="comercios",
+            columna_combo=2
+        )
 
         tabs.addTab(tab_insert, "INSERTAR")
         tabs.addTab(tab_delete, "ELIMINAR")

@@ -38,8 +38,13 @@ class ComerciosView(QWidget):
         )
 
         # 3. Listar
-        cabeceras = ["ID Comercio", "Nombre", "Rubro", "Dirección"]
-        tab_list = ListarView(cabeceras=cabeceras, funcion_db=database.obtener_comercios)
+        cabeceras = ["ID Comercio", "Nombre", "Dirección"]
+        tab_list = ListarView(
+            cabeceras=cabeceras, 
+            funcion_db=database.obtener_comercios,
+            placeholder_buscador="🔍 Buscar por ID, Nombre o Dirección...",
+            usar_filtro_combo=False
+        )
 
         tabs.addTab(tab_insert, "INSERTAR")
         tabs.addTab(tab_delete, "ELIMINAR")
