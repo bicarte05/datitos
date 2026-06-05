@@ -239,7 +239,7 @@ def obtener_clientes():
                 COALESCE(s.tipo, 'Sin suscripción')
             FROM public.cliente c
             LEFT JOIN public.suscripcion s ON c.id_suscripcion = s.id_suscripcion
-            ORDER BY c.nombre LIMIT 50
+            ORDER BY c.nombre
         """)
         return cur.fetchall()
     except Error as e:

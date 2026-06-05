@@ -80,7 +80,6 @@ class ListarView(QWidget):
             self.tabla_detalle.setAlternatingRowColors(True)
             self.tabla_detalle.setStyleSheet("QTableWidget { alternate-background-color: #F1F5F9; background-color: #FFFFFF; }")
             self.tabla_detalle.verticalHeader().setVisible(False)
-            self.tabla_detalle.setMaximumHeight(200) 
             layout.addWidget(self.tabla_detalle)
         else:
             self.tabla_detalle = None
@@ -128,34 +127,41 @@ class ListarView(QWidget):
             self.lbl_titulo_detalle.setText("Haz clic en un registro para ver sus pedidos")
 
     def _aplicar_filtros(self, *args):
-        """Oculta o muestra filas. Ignora argumentos de signals de Qt."""
+        """Oculta o muestra filas según los filtros activos."""
         texto_busqueda = self.buscador.text().lower()
         filtro_combo = self.combo_filtro.currentText() if self.usar_filtro_combo else None
+        
+        # Verificar si hay algún filtro activo
+        hay_filtro_activo = bool(texto_busqueda) or (self.usar_filtro_combo and filtro_combo and not filtro_combo.startswith("Todos los"))
         
         # Siempre buscamos en todas las columnas
         columnas_busqueda = range(self.tabla.columnCount())
         
         visibles = 0
         for row in range(self.tabla.rowCount()):
-            mostrar = True
+            mostrar = False  # Por defecto, ocultar todos
             
-            # 1. Filtro de Búsqueda
-            if texto_busqueda:
-                coincide_texto = False
-                for col in columnas_busqueda:
-                    item = self.tabla.item(row, col)
-                    if item and texto_busqueda in item.text().lower():
-                        coincide_texto = True
-                        break
-                if not coincide_texto:
-                    mostrar = False
-                    
-            # 2. Filtro Dinámico (solo si está habilitado y existe la columna)
-            if mostrar and self.usar_filtro_combo and filtro_combo and not filtro_combo.startswith("Todos los"):
-                if self.columna_combo < self.tabla.columnCount():
-                    item_filtro = self.tabla.item(row, self.columna_combo)
-                    if not item_filtro or item_filtro.text() != filtro_combo:
+            # Solo mostrar si hay filtro activo
+            if hay_filtro_activo:
+                mostrar = True
+                
+                # 1. Filtro de Búsqueda
+                if texto_busqueda:
+                    coincide_texto = False
+                    for col in columnas_busqueda:
+                        item = self.tabla.item(row, col)
+                        if item and texto_busqueda in item.text().lower():
+                            coincide_texto = True
+                            break
+                    if not coincide_texto:
                         mostrar = False
+                        
+                # 2. Filtro Dinámico (solo si está habilitado y existe la columna)
+                if mostrar and self.usar_filtro_combo and filtro_combo and not filtro_combo.startswith("Todos los"):
+                    if self.columna_combo < self.tabla.columnCount():
+                        item_filtro = self.tabla.item(row, self.columna_combo)
+                        if not item_filtro or item_filtro.text() != filtro_combo:
+                            mostrar = False
             
             self.tabla.setRowHidden(row, not mostrar)
             if mostrar:

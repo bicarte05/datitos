@@ -44,7 +44,7 @@ class PedidosCompletoView(QWidget):
         form_layout.addWidget(lbl)
         combo_cliente = QComboBox()
         combo_cliente.addItem("Seleccionar cliente", None)
-        for id_cli, nombre, email, telefono in self.clientes:
+        for id_cli, nombre, email, telefono, _ in self.clientes:
             combo_cliente.addItem(f"{nombre} ({email})", id_cli)
         combo_cliente.currentIndexChanged.connect(self._on_cliente_changed)
         combo_cliente.setMinimumHeight(36)

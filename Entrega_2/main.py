@@ -23,7 +23,7 @@ C_TEXTO       = "#0F172A"
 C_TEXTO_MUTED = "#64748B"
 C_DANGER      = "#EF4444"
 C_SUCCESS     = "#22C55E"
-C_WHITE       = "#CF7A7A"
+C_WHITE       = "#FFFFFF"
 
 NAV_ITEMS = ["Clientes", "Pedidos", "Comercios"]
 
@@ -155,6 +155,40 @@ HOJA_DE_ESTILOS = f"""
     }}
     QLineEdit:hover {{
         border-color: #94A3B8;
+    }}
+
+    /* ── COMBOBOX ────────────────────────────────────────────────────── */
+    QComboBox {{
+        background-color: {C_WHITE};
+        border: 1.5px solid {C_BORDER};
+        border-radius: 7px;
+        padding: 10px 12px;
+        font-size: 13px;
+        color: {C_TEXTO};
+        selection-background-color: {C_ACENTO_FONDO};
+    }}
+    QComboBox:focus {{
+        border-color: {C_ACENTO};
+        background-color: #F0F9FF;
+    }}
+    QComboBox:hover {{
+        border-color: #94A3B8;
+    }}
+    QComboBox::drop-down {{
+        border: none;
+        background-color: transparent;
+    }}
+    QComboBox::down-arrow {{
+        width: 12px;
+        height: 8px;
+        margin-right: 6px;
+    }}
+    QComboBox QAbstractItemView {{
+        background-color: {C_WHITE};
+        color: {C_TEXTO};
+        border: 1px solid {C_BORDER};
+        border-radius: 7px;
+        selection-background-color: {C_ACENTO_FONDO};
     }}
 
     /* ── BUTTONS ─────────────────────────────────────────────────────── */
