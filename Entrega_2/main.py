@@ -23,7 +23,7 @@ C_TEXTO       = "#0F172A"
 C_TEXTO_MUTED = "#64748B"
 C_DANGER      = "#EF4444"
 C_SUCCESS     = "#22C55E"
-C_WHITE       = "#FFFFFF"
+C_WHITE       = "#CF7A7A"
 
 NAV_ITEMS = ["Clientes", "Pedidos", "Comercios"]
 
@@ -170,6 +170,22 @@ HOJA_DE_ESTILOS = f"""
     }}
     QPushButton:hover   {{ background-color: {C_ACENTO_DARK}; }}
     QPushButton:pressed {{ background-color: #0369A1; }}
+
+    /* Botón Limpiar */
+    QPushButton#btn_limpiar {{
+        background-color: #F59E0B;
+        color: {C_WHITE};
+    }}
+    QPushButton#btn_limpiar:hover   {{ background-color: #D97706; }}
+    QPushButton#btn_limpiar:pressed {{ background-color: #B45309; }}
+
+    /* Botón Cancelar */
+    QPushButton#btn_cancelar {{
+        background-color: #6B7280;
+        color: {C_WHITE};
+    }}
+    QPushButton#btn_cancelar:hover   {{ background-color: #4B5563; }}
+    QPushButton#btn_cancelar:pressed {{ background-color: #374151; }}
 
     /* ── TABLE ───────────────────────────────────────────────────────── */
     QTableWidget {{
@@ -332,6 +348,10 @@ class VentanaPrincipal(QMainWindow):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setStyleSheet(HOJA_DE_ESTILOS)
+    
+    # Sincronizar las secuencias de la BD antes de mostrar la ventana
+    database.sincronizar_secuencias()
+    
     ventana = VentanaPrincipal()
     ventana.show()
     sys.exit(app.exec())
