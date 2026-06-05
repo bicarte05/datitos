@@ -106,10 +106,7 @@ def sincronizar_secuencias():
         if conn: conn.close()
 
 def _limpiar_id(valor_str):
-    """
-    Convierte un string a un entero válido para búsquedas de ID.
-    Si tiene guion, toma solo la primera parte. Luego quita puntos si los hay.
-    """
+    """Convierte un string a un entero válido para búsquedas de ID."""
     try:
         limpio = str(valor_str).split('-')[0].replace('.', '')
         return int(limpio)
@@ -222,14 +219,13 @@ def registrar_cliente(nombre, email, telefono):
         return False
     finally:
         if conn: conn.close()
-#cambio basti esto
+
 def obtener_clientes():
     """Obtiene lista de clientes."""
     conn = conectar()
     if not conn: return []
     try:
         cur = conn.cursor()
-        # Usamos COALESCE para poner texto por defecto si el cliente no tiene telefono o suscripcion
         cur.execute("""
             SELECT 
                 c.id_cliente, 
@@ -303,7 +299,6 @@ def obtener_comercios():
     if not conn: return []
     try:
         cur = conn.cursor()
-        # SE AGREGÓ: rubro, id_ciudad
         cur.execute("SELECT id_comercio, nombre, direccion, rubro, id_ciudad FROM public.comercio ORDER BY nombre")
         return cur.fetchall()
     except Error as e:
@@ -376,7 +371,6 @@ def obtener_pedidos():
     if not conn: return []
     try:
         cur = conn.cursor()
-        # SE AGREGÓ: total_productos, id_repartidor
         cur.execute("""
             SELECT id_pedido, id_cliente, id_comercio, total_productos, id_repartidor
             FROM public.pedido
@@ -504,7 +498,6 @@ if __name__ == "__main__":
                     tabla_actual = table
                 print(f"   {column:<30} {dtype}")
         conn.close()
-#basti agregar tabla debajo en listar
 def obtener_pedidos_por_cliente(id_cliente):
     conn = conectar()
     if not conn: return []

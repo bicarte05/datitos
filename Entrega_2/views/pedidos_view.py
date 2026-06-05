@@ -21,8 +21,8 @@ class PedidosView(QWidget):
             ("ID Pedido", "input", "Buscar por ID de Pedido..."),
             ("ID Cliente solicitante", "info", ""),
             ("ID Comercio preparador", "info", ""),
-            ("Total de Productos", "info", ""),     # <--- NUEVO
-            ("ID Repartidor", "info", "")           # <--- NUEVO
+            ("Total de Productos", "info", ""),
+            ("ID Repartidor", "info", "")
         ]
         tab_delete = EliminarView(
             esquema_campos=esquema_eliminar,
@@ -30,7 +30,7 @@ class PedidosView(QWidget):
             funcion_obtener_datos=database.obtener_pedidos
         )
 
-        # 3. Listar (Actualizado para que coincida con las 5 columnas)
+        # 3. Listar
         cabeceras = ["ID Pedido", "ID Cliente", "ID Comercio", "Total Productos", "ID Repartidor"]
         tab_list = ListarView(cabeceras=cabeceras, funcion_db=database.obtener_pedidos)
 

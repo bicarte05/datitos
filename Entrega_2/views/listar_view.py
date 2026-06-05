@@ -17,28 +17,26 @@ class ListarView(QWidget):
         layout.setContentsMargins(16, 16, 16, 16)
         layout.setSpacing(12)
 
-        # --- ZONA DE FILTROS (NUEVO) ---
+        # --- FILTROS ---
         filtros_layout = QHBoxLayout()
         
-        # 1. Buscador Universal
         self.buscador = QLineEdit()
         self.buscador.setPlaceholderText(placeholder_buscador)
         self.buscador.setMinimumHeight(36)
-        self.buscador.textChanged.connect(self._aplicar_filtros) # Filtra mientras escribes
+        self.buscador.textChanged.connect(self._aplicar_filtros)
         
-        # 2. Filtro Dinámico (Combo)
         self.combo_filtro = QComboBox()
         self.combo_filtro.setMinimumHeight(36)
         self.combo_filtro.setMinimumWidth(180)
         self.combo_filtro.currentTextChanged.connect(self._aplicar_filtros)
-        self.combo_filtro.setVisible(usar_filtro_combo)  # Se muestra solo si se especifica
+        self.combo_filtro.setVisible(usar_filtro_combo)
         
         filtros_layout.addWidget(self.buscador)
         if usar_filtro_combo:
             filtros_layout.addWidget(self.combo_filtro)
         layout.addLayout(filtros_layout)
 
-        # --- BARRA SUPERIOR (Contador y Botón) ---
+        # --- BARRA SUPERIOR ---
         barra = QHBoxLayout()
         self.lbl_contador = QLabel("Cargando…")
         self.lbl_contador.setStyleSheet("font-size: 12px; color: #64748B;")
@@ -66,7 +64,7 @@ class ListarView(QWidget):
         self.tabla.cellClicked.connect(self._al_seleccionar_fila)
         layout.addWidget(self.tabla)
 
-        # --- TABLA DETALLES ---
+        # --- DETALLES ADICIONALES ---
         if self.funcion_detalle_db and cabeceras_detalle:
             self.lbl_titulo_detalle = QLabel("Haz clic en un registro para ver sus pedidos")
             self.lbl_titulo_detalle.setStyleSheet("font-weight: bold; margin-top: 10px; color: #334155;")
@@ -109,7 +107,7 @@ class ListarView(QWidget):
 
         # Llenamos el menú desplegable con los valores encontrados
         if self.usar_filtro_combo:
-            self.combo_filtro.blockSignals(True) # Bloqueamos para que no filtre accidentalmente mientras se llena
+            self.combo_filtro.blockSignals(True)
             self.combo_filtro.clear()
             self.combo_filtro.addItem(f"Todos los {self.titulo_combo}")
             for valor in sorted(valores_filtro_unicos):

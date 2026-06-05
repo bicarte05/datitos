@@ -188,7 +188,21 @@ HOJA_DE_ESTILOS = f"""
         color: {C_TEXTO};
         border: 1px solid {C_BORDER};
         border-radius: 7px;
-        selection-background-color: {C_ACENTO_FONDO};
+        outline: none;
+        padding: 0px;
+    }}
+    QComboBox QAbstractItemView::item {{
+        color: {C_TEXTO};
+        background-color: {C_WHITE};
+        padding: 8px 12px;
+    }}
+    QComboBox QAbstractItemView::item:hover {{
+        background-color: {C_ACENTO_FONDO};
+        color: {C_ACENTO_DARK};
+    }}
+    QComboBox QAbstractItemView::item:selected {{
+        background-color: {C_ACENTO_FONDO};
+        color: {C_ACENTO_DARK};
     }}
 
     /* ── BUTTONS ─────────────────────────────────────────────────────── */
