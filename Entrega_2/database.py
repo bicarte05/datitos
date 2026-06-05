@@ -63,21 +63,31 @@ def registrar_cliente(rut, nombre, email):
         return False
     finally:
         if conn: conn.close()
-
+#cambio basti esto
 def obtener_clientes():
     conn = conectar()
     if not conn: return []
     try:
         cur = conn.cursor()
-        # Adaptado a las columnas reales
-        cur.execute("SELECT id_cliente, nombre, email FROM public.cliente ORDER BY nombre LIMIT 50")
+        # Usamos COALESCE para poner texto por defecto si el cliente no tiene telefono o suscripcion
+        cur.execute("""
+            SELECT 
+                c.id_cliente, 
+                c.nombre, 
+                c.email, 
+                COALESCE(c.telefono, 'Sin teléfono'), 
+                COALESCE(s.tipo, 'Sin suscripción')
+            FROM public.cliente c
+            LEFT JOIN public.suscripcion s ON c.id_suscripcion = s.id_suscripcion
+            ORDER BY c.nombre LIMIT 50
+        """)
         return cur.fetchall()
     except Error as e:
         print(f"Error obteniendo clientes: {e}")
         return []
     finally:
         if conn: conn.close()
-
+#hasta aca
 def eliminar_cliente(rut):
     conn = conectar()
     if not conn: return False
@@ -248,3 +258,22 @@ if __name__ == "__main__":
                     tabla_actual = table
                 print(f"   {column:<30} {dtype}")
         conn.close()
+#basti agregar tabla debajo en listar
+def obtener_pedidos_por_cliente(id_cliente):
+    conn = conectar()
+    if not conn: return []
+    try:
+        cur = conn.cursor()
+        # Traemos solo los pedidos del cliente seleccionado
+        cur.execute("""
+            SELECT id_pedido, id_comercio, total_productos 
+            FROM public.pedido 
+            WHERE id_cliente = %s 
+            ORDER BY id_pedido DESC
+        """, (id_cliente,))
+        return cur.fetchall()
+    except Error as e:
+        print(f"Error obteniendo pedidos del cliente: {e}")
+        return []
+    finally:
+        if conn: conn.close()
